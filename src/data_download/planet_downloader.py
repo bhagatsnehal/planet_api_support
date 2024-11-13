@@ -203,4 +203,4 @@ if __name__ == "__main__":
         os.makedirs(output_data_dir)
 
     download_data(output_data_dir, start_date, end_date)
-    logger.error("Download Process Complete")
+    logger.info("Download Process Complete")
