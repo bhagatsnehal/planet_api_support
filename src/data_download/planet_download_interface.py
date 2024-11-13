@@ -160,7 +160,7 @@ def place_order(image_id, polygon_coords, order_name_suffix, crs_system="EPSG:43
 
     """
     order_request = {
-        # "name": image_id + order_name_suffix,
+        "name": image_id + order_name_suffix,
         "source_type": "scenes",
         "products": [
             {
