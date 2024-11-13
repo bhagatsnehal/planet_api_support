@@ -100,48 +100,51 @@ def process_orders(placed_orders, dest_folder):
 @retry(stop_max_attempt_number=3, retry_on_exception=lambda e: isinstance(e, HTTPError))
 def process_single_order(image_id, order_id, dest_folder):
     # image sub folder nameing convention
-    folder_name = image_id.split("#")[1]
-    prefix = image_id.split("#")[0]
-    logger.info(prefix)
+    while True:
+        folder_name = image_id.split("#")[1]
+        prefix = image_id.split("#")[0]
+        logger.info(prefix)
 
-    # Download request
-    order_request_result = planet.get_order_status(order_id)
-    order_request_result.raise_for_status()
+        # Download request
+        order_request_result = planet.get_order_status(order_id)
+        order_request_result.raise_for_status()
 
-    order_status = order_request_result.json()["state"]
+        order_status = order_request_result.json()["state"]
 
-    if order_status == "success":
-        logger.info("Image {} is ready. Downloading...".format(image_id))
+        if order_status == "success":
+            logger.info("Image {} is ready. Downloading...".format(image_id))
 
-        outdir = join(dest_folder, folder_name)
-        if not isdir(outdir):
-            logger.info("Creating output sub folder {}...".format(outdir))
-            mkdir(outdir)
+            outdir = join(dest_folder, folder_name)
+            if not isdir(outdir):
+                logger.info("Creating output sub folder {}...".format(outdir))
+                mkdir(outdir)
 
-        # Every download order returns 3 files - main tif, metadata.json and manifest.json
-        for element in order_request_result.json()["_links"]["results"]:
-            download_url = element["location"]
-            logger.info(element["name"])
-            file_name = element["name"].split("/")[-1]
-            logger.info(file_name)
+            # Every download order returns 3 files - main tif, metadata.json and manifest.json
+            for element in order_request_result.json()["_links"]["results"]:
+                download_url = element["location"]
+                logger.info(element["name"])
+                file_name = element["name"].split("/")[-1]
+                logger.info(file_name)
 
-            # to avoid overwriting manifest files
-            if file_name == "manifest.json":
-                file_name = prefix + "_" + file_name
+                # to avoid overwriting manifest files
+                if file_name == "manifest.json":
+                    file_name = prefix + "_" + file_name
 
-            download_result = planet.download_order(download_url)
-            if download_result.status_code != 200:
-                logger.error("")
-            with open(join(outdir, file_name), "wb") as f:
-                f.write(download_result.content)
-            time.sleep(2)
-        logger.info("Image {} download complete.".format(image_id))
-    elif order_status in ["queued", "running"]:
-        logger.info("Still processing {}. Waiting...".format(image_id))
-        time.sleep(60)  # Wait 60 seconds before checking again
-    else:
-        logger.debug("Unexpected status {} for {}.".format(order_status, image_id))
-        raise HTTPError("Unexpected order status {}".format(order_status))
+                download_result = planet.download_order(download_url)
+                if download_result.status_code != 200:
+                    logger.error("")
+                with open(join(outdir, file_name), "wb") as f:
+                    f.write(download_result.content)
+                time.sleep(2)
+            logger.info("Image {} download complete.".format(image_id))
+            break
+        elif order_status in ["queued", "running"]:
+            logger.info("Still processing {}. Waiting...".format(image_id))
+            time.sleep(60)  # Wait 60 seconds before checking again
+        else:
+            logger.debug("Unexpected status {} for {}.".format(order_status, image_id))
+            raise HTTPError("Unexpected order status {}".format(order_status))
+            break
 
 
 
