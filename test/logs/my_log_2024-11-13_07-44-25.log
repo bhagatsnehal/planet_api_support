@@ -1,0 +1,3 @@
+2024-11-13 07:44:25,698 - my_logger - INFO - Starting download process now.....
+2024-11-13 07:44:25,700 - my_logger - INFO - Placing 2 orders
+2024-11-13 07:44:40,133 - my_logger - ERROR - Download Process Complete
