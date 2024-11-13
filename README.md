@@ -47,6 +47,7 @@ $ conda install --file requirements.txt
 Run the python_downloader.py script with necessary arguments 
 
 ```
+$ cd src/data_download
 $ python planet_downloader.py -cc 0.01 -rlat=0.05 -rlon=0.05 -start-date=20210101 -end-date=20210228
 ```
 Details of arguments:
