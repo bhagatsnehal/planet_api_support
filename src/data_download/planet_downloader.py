@@ -151,7 +151,7 @@ def download_data(output_data_dir, start_dt, end_dt):
     uid = datetime.now().strftime('%Y%m%d%H%M')
     sites_list_filepath = '../settings/sites.txt'
 
-    planned_orders_filepath = '../settings/planned_orders_{}.txt'.format(uid)
+    planned_orders_filepath = '../settings/planned_orders/planned_orders_{}.txt'.format(uid)
 
     orders_to_be_placed = helper.get_locations_and_dates_to_download(start_dt, end_dt,
                                                                      sites_list_filepath,
