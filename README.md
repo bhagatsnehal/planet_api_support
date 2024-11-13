@@ -64,8 +64,9 @@ The code executes download requests in the following order:
   1. Setup authentication using API KEY
   2. Create a list of orders based on location and date ranges provided
   3. Place individual orders in batches of 100 from above list
-  4. Download individual orders in batches of 100
-  5. Any Client-Side/Server-Side errors in this process trigger a retry(upto maximum 3 retries)
+  4. You should also be able to see these placed orders on your [PLANET DASHBOARD](https://www.planet.com/account/#/orders) in real-time
+  5. Download individual orders in batches of 100
+  6. Any Client-Side/Server-Side errors in this process trigger a retry(upto maximum 3 retries)
 
 ## OUTPUT FILES GENERATED
 -----------------------------------------------------------------------------------------------------
